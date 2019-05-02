@@ -1,0 +1,10 @@
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\bin\Release\NewClientIntakeForm.exe.config
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\bin\Release\NewClientIntakeForm.exe
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\bin\Release\NewClientIntakeForm.pdb
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.NewClientIntakeForm.resources
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.Properties.Resources.resources
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.csproj.GenerateResource.cache
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.csproj.CoreCompileInputs.cache
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.exe
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.pdb
+C:\Users\TJC\source\repos\NewClientIntakeForm\NewClientIntakeForm\obj\Release\NewClientIntakeForm.csprojAssemblyReference.cache
