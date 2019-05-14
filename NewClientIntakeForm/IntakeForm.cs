@@ -95,8 +95,8 @@ namespace NewClientIntakeForm
             BookmarkList.Add("ComplainantName", Complainant.Name);
             BookmarkList.Add("ComplainantAddressLine1", Complainant.Address.Line1);
             BookmarkList.Add("ComplainantAddressLine2", Complainant.Address.Line2);
-            BookmarkList.Add("DateOfHire", Complainant.DateOfHire.ToString("D"));
-            BookmarkList.Add("DateOfTermination", Complainant.DateOfTermination.ToString("D"));
+            BookmarkList.Add("DateOfHire", Complainant.DateOfHire.ToString("MMMM d, yyyy"));
+            BookmarkList.Add("DateOfTermination", Complainant.DateOfTermination.ToString("MMMM d, yyyy"));
             BookmarkList.Add("OSHARegion", OSHA.RegionNumber);
             BookmarkList.Add("OSHAAddLine1", OSHA.Address.Line1);
             BookmarkList.Add("OSHAAddLine2", OSHA.Address.Line2);
