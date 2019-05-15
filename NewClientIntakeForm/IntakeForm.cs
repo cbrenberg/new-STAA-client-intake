@@ -37,40 +37,42 @@ namespace NewClientIntakeForm
         private void BtnSubmit_Click(object sender, EventArgs e)
         {
             Complainant = new Complainant(
-                (isMissing(CompFirstName.Text) && isMissing(CompLastName.Text)) ? "COMPLAINANT NAME" : (CompFirstName.Text.Trim() + " " + CompLastName.Text.Trim()),
+                (IsMissing(CompFirstName.Text) && IsMissing(CompLastName.Text)) ? "COMPLAINANT NAME" : (CompFirstName.Text.Trim() + " " + CompLastName.Text.Trim()),
                 new Address(
-                    isMissing(CompAddLine1.Text) ? "COMPLAINANT ADDRESS LINE 1" : CompAddLine1.Text,
-                    isMissing(CompAddLine2.Text) ? "COMPLAINANT ADDRESS LINE 2" : CompAddLine2.Text
+                    IsMissing(CompAddLine1.Text) ? "COMPLAINANT ADDRESS LINE 1" : CompAddLine1.Text,
+                    IsMissing(CompAddLine2.Text) ? "COMPLAINANT ADDRESS LINE 2" : CompAddLine2.Text
                     ), 
                 DateOfHirePicker.Value, 
                 DateOfTerminationPicker.Value, 
-                isMissing(CompEmail.Text) ? "COMPLAINANT EMAIL" : CompEmail.Text, 
-                isMissing(CompPhone.Text) ? "COMPLAINANT PHONE" : CompPhone.Text
+                IsMissing(CompEmail.Text) ? "COMPLAINANT EMAIL" : CompEmail.Text, 
+                IsMissing(CompPhone.Text) ? "COMPLAINANT PHONE" : CompPhone.Text
                 );
 
             RespondentCompanyOne = new NamedEntityWithAddress(
-                isMissing(RespComp1Name.Text) ? "RESPONDENT COMPANY 1" : RespComp1Name.Text, 
+                IsMissing(RespComp1Name.Text) ? "RESPONDENT COMPANY 1" : RespComp1Name.Text, 
                 new Address(
-                    isMissing(RespComp1AddLine1.Text) ? "RESPONDENT 1 ADDRESS LINE 1" : RespComp1AddLine1.Text,
-                    isMissing(RespComp1AddLine2.Text) ? "RESPONDENT 1 ADDRESS LINE 2" : RespComp1AddLine2.Text
+                    IsMissing(RespComp1AddLine1.Text) ? "RESPONDENT 1 ADDRESS LINE 1" : RespComp1AddLine1.Text,
+                    IsMissing(RespComp1AddLine2.Text) ? "RESPONDENT 1 ADDRESS LINE 2" : RespComp1AddLine2.Text
                     )
                 );
 
             RespondentCompanyTwo = new NamedEntityWithAddress(
-                isMissing(RespComp2Name.Text) ? "RESPONDENT COMPANY 2" : RespComp2Name.Text,
+                IsMissing(RespComp2Name.Text) ? "RESPONDENT COMPANY 2" : RespComp2Name.Text,
                 new Address(
-                    isMissing(RespComp2AddLine1.Text) ? "RESPONDENT 2 ADDRESS LINE 1" : RespComp2AddLine1.Text,
-                    isMissing(RespComp2AddLine2.Text) ? "RESPONDENT 2 ADDRESS LINE 2" : RespComp2AddLine2.Text
+                    IsMissing(RespComp2AddLine1.Text) ? "RESPONDENT 2 ADDRESS LINE 1" : RespComp2AddLine1.Text,
+                    IsMissing(RespComp2AddLine2.Text) ? "RESPONDENT 2 ADDRESS LINE 2" : RespComp2AddLine2.Text
                     )
                 );
 
-            RespondentIndividualOne = new NamedEntity(isMissing(RespInd1Name.Text) ? "RESPONDENT INDIVIDUAL 1" : RespInd1Name.Text);
+            RespondentIndividualOne = new NamedEntity(IsMissing(RespInd1Name.Text) ? "RESPONDENT INDIVIDUAL 1" : RespInd1Name.Text);
 
-            RespondentIndividualTwo = new NamedEntity(isMissing(RespInd2Name.Text) ? "RESPONDENT INDIVIDUAL 2" : RespInd2Name.Text);
+            RespondentIndividualTwo = new NamedEntity(IsMissing(RespInd2Name.Text) ? "RESPONDENT INDIVIDUAL 2" : RespInd2Name.Text);
 
-            SigningAttorney = new NamedEntity(isMissing(AttorneyName.Text) ? "SIGNING ATTORNEY" : AttorneyName.Text);
+            SigningAttorney = new NamedEntity(IsMissing(AttorneyName.Text) ? "SIGNING ATTORNEY" : AttorneyName.Text);
 
             OSHA = new OSHARegion(selectOSHA.Text);
+
+            toolStripStatusLabel1.Text = "Creating client folder...";
 
             //create client folder structure
             string basepath = "..\\..\\Active Clients\\OSHA";
@@ -90,6 +92,7 @@ namespace NewClientIntakeForm
             string[] linesArray = new String[5] { clientText, company1Text, company2Text, individual1Text, individual2Text };
 
             File.WriteAllLines(clientInfoPath, linesArray);
+            toolStripProgressBar1.Value = 25;
 
             //populate bookmark dictionary
             BookmarkList.Add("ComplainantName", Complainant.Name);
@@ -111,12 +114,13 @@ namespace NewClientIntakeForm
             BookmarkList.Add("RespondentIndividual2Name",RespondentIndividualTwo.Name);
             BookmarkList.Add("SigningAttorney", SigningAttorney.Name);
 
+            toolStripProgressBar1.Value += 25;
             //create complaint template
             PopulateClientTemplate("New Complaint Template.dotx", "Complaint Draft v1.docx", BookmarkList);
-
+            toolStripProgressBar1.Value += 25;
             //create anatomy letter
             PopulateClientTemplate("Anatomy Letter Template.dotx", "Anatomy Letter Draft v1.docx", BookmarkList);
-
+            toolStripProgressBar1.Value = 100;
             //create retainer
             PopulateClientTemplate("Retainer Template.dotx", "Retainer Draft v1.docx", BookmarkList);
             
@@ -131,6 +135,8 @@ namespace NewClientIntakeForm
 
         private void PopulateClientTemplate(string templateName, string fileSaveName, Dictionary<string, string> bookmarks)
         {
+            toolStripStatusLabel1.Text = "Creating " + fileSaveName;
+
             object oMissing = Missing.Value;
             string currentDirectory = Directory.GetCurrentDirectory();
             object oPathToTemplate = currentDirectory + "\\" + templateName;
@@ -168,9 +174,10 @@ namespace NewClientIntakeForm
             document.SaveAs2(Path.Combine(absolutePathToSave, fileSaveName));
             document.Close();
             wordApplication.Quit();
+            
         }
 
-        private bool isMissing(string inputValue)
+        private bool IsMissing(string inputValue)
         {
             return inputValue.Length < 2;
         }
