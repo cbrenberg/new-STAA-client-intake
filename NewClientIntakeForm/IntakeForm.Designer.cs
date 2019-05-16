@@ -83,9 +83,11 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripSpacer = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripSpacer = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.SelectedDocsCheckboxList = new System.Windows.Forms.CheckedListBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -585,6 +587,8 @@
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.SelectedDocsCheckboxList);
+            this.panel7.Controls.Add(this.label9);
             this.panel7.Controls.Add(this.btnCancel);
             this.panel7.Controls.Add(this.btnSubmit);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -596,7 +600,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(55, 144);
+            this.btnCancel.Location = new System.Drawing.Point(55, 189);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(144, 43);
             this.btnCancel.TabIndex = 21;
@@ -606,7 +610,7 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(55, 99);
+            this.btnSubmit.Location = new System.Drawing.Point(55, 140);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(144, 43);
             this.btnSubmit.TabIndex = 20;
@@ -626,6 +630,12 @@
             this.statusStrip1.TabIndex = 24;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripSpacer
+            // 
+            this.toolStripSpacer.Name = "toolStripSpacer";
+            this.toolStripSpacer.Size = new System.Drawing.Size(633, 17);
+            this.toolStripSpacer.Spring = true;
+            // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -637,11 +647,30 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(150, 16);
             // 
-            // toolStripSpacer
+            // label9
             // 
-            this.toolStripSpacer.Name = "toolStripSpacer";
-            this.toolStripSpacer.Size = new System.Drawing.Size(602, 17);
-            this.toolStripSpacer.Spring = true;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(5, 5);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(144, 13);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Select Documents To Create";
+            // 
+            // SelectedDocsCheckboxList
+            // 
+            this.SelectedDocsCheckboxList.BackColor = System.Drawing.SystemColors.Control;
+            this.SelectedDocsCheckboxList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.SelectedDocsCheckboxList.CheckOnClick = true;
+            this.SelectedDocsCheckboxList.FormattingEnabled = true;
+            this.SelectedDocsCheckboxList.Items.AddRange(new object[] {
+            "Anatomy of a Lawsuit",
+            "Retainer Agreement",
+            "OSHA Complaint",
+            "Settlement Agreement"});
+            this.SelectedDocsCheckboxList.Location = new System.Drawing.Point(21, 25);
+            this.SelectedDocsCheckboxList.Name = "SelectedDocsCheckboxList";
+            this.SelectedDocsCheckboxList.Size = new System.Drawing.Size(191, 90);
+            this.SelectedDocsCheckboxList.TabIndex = 26;
             // 
             // NewClientIntakeForm
             // 
@@ -667,6 +696,7 @@
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -734,6 +764,8 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripSpacer;
+        private System.Windows.Forms.CheckedListBox SelectedDocsCheckboxList;
+        private System.Windows.Forms.Label label9;
     }
 }
 

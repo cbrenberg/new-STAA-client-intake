@@ -36,6 +36,7 @@ namespace NewClientIntakeForm
 
         private void BtnSubmit_Click(object sender, EventArgs e)
         {
+            this.Enabled = false;
             Complainant = new Complainant(
                 (IsMissing(CompFirstName.Text) && IsMissing(CompLastName.Text)) ? "COMPLAINANT NAME" : (CompFirstName.Text.Trim() + " " + CompLastName.Text.Trim()),
                 new Address(
@@ -92,7 +93,6 @@ namespace NewClientIntakeForm
             string[] linesArray = new String[5] { clientText, company1Text, company2Text, individual1Text, individual2Text };
 
             File.WriteAllLines(clientInfoPath, linesArray);
-            toolStripProgressBar1.Value = 25;
 
             //populate bookmark dictionary
             BookmarkList.Add("ComplainantName", Complainant.Name);
@@ -114,15 +114,34 @@ namespace NewClientIntakeForm
             BookmarkList.Add("RespondentIndividual2Name",RespondentIndividualTwo.Name);
             BookmarkList.Add("SigningAttorney", SigningAttorney.Name);
 
-            toolStripProgressBar1.Value += 25;
-            //create complaint template
-            PopulateClientTemplate("New Complaint Template.dotx", "Complaint Draft v1.docx", BookmarkList);
-            toolStripProgressBar1.Value += 25;
-            //create anatomy letter
-            PopulateClientTemplate("Anatomy Letter Template.dotx", "Anatomy Letter Draft v1.docx", BookmarkList);
-            toolStripProgressBar1.Value = 100;
-            //create retainer
-            PopulateClientTemplate("Retainer Template.dotx", "Retainer Draft v1.docx", BookmarkList);
+            var checkedItems = SelectedDocsCheckboxList.CheckedItems;
+            KeyValuePair<string, string>[] listOfTemplatesToPopulate = new KeyValuePair<string, string>[checkedItems.Count];
+            for (int i = 0; i < checkedItems.Count; i++)
+            {
+                switch (checkedItems[i].ToString())
+                {
+                    case "Anatomy of a Lawsuit":
+                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("Anatomy Letter Template.dotx", "Anatomy of a Lawsuit Draft v1.docx");
+                        break;
+                    case "Retainer Agreement":
+                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("Retainer Template.dotx", "Retainer Draft v1.docx");
+                        break;
+                    case "OSHA Complaint":
+                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("New Complaint Template.dotx", "Complaint Draft v1.docx");
+                        break;
+                    case "Settlement Agreement":
+                        break;
+                    default:
+                        break;
+                }
+                    
+            }
+
+            foreach(KeyValuePair<string, string> template in listOfTemplatesToPopulate)
+            {
+                toolStripProgressBar1.Value += 100 / listOfTemplatesToPopulate.Length;
+                PopulateClientTemplate(template, BookmarkList);
+            }
             
             //close this form
             this.Close();
@@ -133,18 +152,18 @@ namespace NewClientIntakeForm
             this.Close();
         }
 
-        private void PopulateClientTemplate(string templateName, string fileSaveName, Dictionary<string, string> bookmarks)
+        private void PopulateClientTemplate(KeyValuePair<string, string> templateNameAndfileSaveName, Dictionary<string, string> bookmarks)
         {
-            toolStripStatusLabel1.Text = "Creating " + fileSaveName;
+            toolStripStatusLabel1.Text = "Creating " + templateNameAndfileSaveName.Value;
 
             object oMissing = Missing.Value;
             string currentDirectory = Directory.GetCurrentDirectory();
-            object oPathToTemplate = currentDirectory + "\\" + templateName;
+            object oPathToTemplate = currentDirectory + "\\" + templateNameAndfileSaveName.Key;
             string absolutePathToSave = Path.GetFullPath(FullPath);
 
             if (!File.Exists(oPathToTemplate.ToString()))
             {
-                MessageBox.Show($"Cannot find template: {templateName}.\nPlease fill out remaining templates manually.", "Error", MessageBoxButtons.OKCancel);
+                MessageBox.Show($"Cannot find template: {templateNameAndfileSaveName.Key}.\nPlease fill out remaining templates manually.", "Error", MessageBoxButtons.OKCancel);
             }
 
             Word._Application wordApplication = new Word.Application();
@@ -171,7 +190,7 @@ namespace NewClientIntakeForm
 
             document.Repaginate();
             document.Fields.Update();
-            document.SaveAs2(Path.Combine(absolutePathToSave, fileSaveName));
+            document.SaveAs2(Path.Combine(absolutePathToSave, templateNameAndfileSaveName.Value));
             document.Close();
             wordApplication.Quit();
             

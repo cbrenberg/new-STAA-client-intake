@@ -130,7 +130,7 @@ namespace NewClientIntakeForm.Models
                     address = new Address("Federal Building, 201 Varick Street, Room 670", "New York, New York 10014");
                     break;
                 case "III":
-                    address = new Address("The Curtis Center-Suite 740 West, 170 S.Independence Mall West", "Philadelphia, PA 19106-3309");
+                    address = new Address("The Curtis Center-Suite 740 West, 170 S. Independence Mall West", "Philadelphia, PA 19106-3309");
                     break;
                 case "IV":
                     address = new Address("Sam Nunn Atlanta Federal Center, 61 Forsyth Street, SW, Room 6T50", "Atlanta, Georgia 30303");
