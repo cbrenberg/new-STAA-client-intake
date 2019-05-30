@@ -9,6 +9,7 @@ namespace NewClientIntakeForm.Models
     public class NamedEntity
     {
         public string Name { get; private set; }
+        public bool HasDefaultValues { get; set; } = true;
 
         public NamedEntity(string name)
         {

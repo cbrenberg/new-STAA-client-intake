@@ -29,11 +29,6 @@ namespace NewClientIntakeForm
             InitializeComponent();
         }
 
-        private void TableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void BtnSubmit_Click(object sender, EventArgs e)
         {
             this.Enabled = false;
@@ -48,6 +43,7 @@ namespace NewClientIntakeForm
                 IsMissing(CompEmail.Text) ? "COMPLAINANT EMAIL" : CompEmail.Text, 
                 IsMissing(CompPhone.Text) ? "COMPLAINANT PHONE" : CompPhone.Text
                 );
+            Complainant.HasDefaultValues = IsMissing(CompFirstName.Text) ? true : false;
 
             RespondentCompanyOne = new NamedEntityWithAddress(
                 IsMissing(RespComp1Name.Text) ? "RESPONDENT COMPANY 1" : RespComp1Name.Text, 
@@ -56,6 +52,7 @@ namespace NewClientIntakeForm
                     IsMissing(RespComp1AddLine2.Text) ? "RESPONDENT 1 ADDRESS LINE 2" : RespComp1AddLine2.Text
                     )
                 );
+            RespondentCompanyOne.HasDefaultValues = IsMissing(RespComp1Name.Text) ? true : false;
 
             RespondentCompanyTwo = new NamedEntityWithAddress(
                 IsMissing(RespComp2Name.Text) ? "RESPONDENT COMPANY 2" : RespComp2Name.Text,
@@ -64,10 +61,15 @@ namespace NewClientIntakeForm
                     IsMissing(RespComp2AddLine2.Text) ? "RESPONDENT 2 ADDRESS LINE 2" : RespComp2AddLine2.Text
                     )
                 );
+            RespondentCompanyTwo.HasDefaultValues = IsMissing(RespComp2Name.Text) ? true : false;
 
             RespondentIndividualOne = new NamedEntity(IsMissing(RespInd1Name.Text) ? "RESPONDENT INDIVIDUAL 1" : RespInd1Name.Text);
+            RespondentIndividualOne.HasDefaultValues = IsMissing(RespInd1Name.Text) ? true : false;
 
             RespondentIndividualTwo = new NamedEntity(IsMissing(RespInd2Name.Text) ? "RESPONDENT INDIVIDUAL 2" : RespInd2Name.Text);
+            RespondentIndividualTwo.HasDefaultValues = IsMissing(RespInd2Name.Text) ? true : false;
+
+            //NamedEntity[] AllRespondents = new NamedEntity[] { RespondentCompanyOne, RespondentCompanyTwo, RespondentIndividualOne, RespondentIndividualTwo };
 
             SigningAttorney = new NamedEntity(IsMissing(AttorneyName.Text) ? "SIGNING ATTORNEY" : AttorneyName.Text);
 
@@ -76,12 +78,34 @@ namespace NewClientIntakeForm
             toolStripStatusLabel1.Text = "Creating client folder...";
 
             //create client folder structure
-            string basepath = "..\\..\\Active Clients\\OSHA";
-            string clientFolder = $"{CompLastName.Text.Trim()}, {CompFirstName.Text.Trim()}";
-            FullPath = basepath + "\\" + clientFolder;
+            try
+            {
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootDriveLetter = Directory.GetDirectoryRoot(currentDirectory);
+              //for debugging:
+                //string rootDriveLetter = "X:\\";
+                string directoryToSearch = rootDriveLetter + "Shared\\Active Clients";
+                string[] oshaFolder = Directory.GetDirectories(directoryToSearch, "OSHA");
+                string basepath = oshaFolder[0];
+                string clientFolderName = $"{CompLastName.Text.Trim()}, {CompFirstName.Text.Trim()}";
+                FullPath = basepath + "\\" + clientFolderName;
+                if (!Directory.Exists(FullPath))
+                {
+                    //create client folder in OSHA folder
+                    Directory.CreateDirectory(FullPath);
+                } else
+                {
+                    MessageBox.Show("File already exists for this client. Please fill templates manually.");
+                    Application.Exit();
+                }
+                
+            } catch (Exception exc)
+            {
+                Console.Write("Could not create directory structure: ", exc);
+            }
+            
 
-            //create client folder in OSHA folder
-            Directory.CreateDirectory(FullPath);
+            
 
             //create case information text document
             string clientInfoPath = FullPath + "\\Client Information.txt";
@@ -145,11 +169,13 @@ namespace NewClientIntakeForm
             
             //close this form
             this.Close();
+            Application.Exit();
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+            Application.Exit();
         }
 
         private void PopulateClientTemplate(KeyValuePair<string, string> templateNameAndfileSaveName, Dictionary<string, string> bookmarks)
