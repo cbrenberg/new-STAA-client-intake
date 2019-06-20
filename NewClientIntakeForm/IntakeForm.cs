@@ -102,7 +102,7 @@ namespace NewClientIntakeForm
             {
                 string currentDirectory = Directory.GetCurrentDirectory();
                 string clientFolderName = $"{CompLastName.Text.Trim()}, {CompFirstName.Text.Trim()}";
-                FullPathToClientDirectory = Path.Combine(currentDirectory, "..", "..", "Shared", "Active Clients", "OSHA", clientFolderName);
+                FullPathToClientDirectory = Path.Combine(currentDirectory, "..", "..", "Active Clients", "OSHA", clientFolderName);
                 if (!Directory.Exists(FullPathToClientDirectory))
                 {
                     Directory.CreateDirectory(FullPathToClientDirectory);
