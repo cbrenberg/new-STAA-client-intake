@@ -101,23 +101,24 @@ namespace NewClientIntakeForm
             try
             {
                 string currentDirectory = Directory.GetCurrentDirectory();
-                //string rootDriveLetter = Directory.GetDirectoryRoot(currentDirectory);
-                //for debugging:
-                string rootDriveLetter = "X:\\";
-                string directoryToSearch = rootDriveLetter + "Shared\\Active Clients";
-                string[] oshaFolder = Directory.GetDirectories(directoryToSearch, "OSHA");
-                string basepath = oshaFolder[0];
+                string basepath = Path.Combine(currentDirectory, "..", "..", "Shared", "Active Clients", "OSHA");
                 string clientFolderName = $"{CompLastName.Text.Trim()}, {CompFirstName.Text.Trim()}";
                 FullPathToClientDirectory = basepath + "\\" + clientFolderName;
                 if (!Directory.Exists(FullPathToClientDirectory))
                 {
-                    //create client folder in OSHA folder
                     Directory.CreateDirectory(FullPathToClientDirectory);
                 }
                 else
                 {
-                    MessageBox.Show("File already exists for this client. Please fill templates manually.");
-                    Application.Exit();
+                    var userAction = MessageBox.Show("File already exists for this client. This may overwrite existing documents. Press OK to continue or Cancel to quit.", "Warning", MessageBoxButtons.OKCancel);
+                    if (userAction == DialogResult.OK)
+                    {
+                        return;
+                    } else
+                    {
+                        Application.Exit();
+                    }
+                    
                 }
 
             }
@@ -127,46 +128,16 @@ namespace NewClientIntakeForm
             }
         }
 
-        private void CreateTemplatesForSelectedItems()
-        {
-            var checkedItems = SelectedDocsCheckboxList.CheckedItems;
-            KeyValuePair<string, string>[] listOfTemplatesToPopulate = new KeyValuePair<string, string>[checkedItems.Count];
-            for (int i = 0; i < checkedItems.Count; i++)
-            {
-                switch (checkedItems[i].ToString())
-                {
-                    case "Anatomy of a Lawsuit":
-                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("Anatomy Letter Template.dotx", "Anatomy of a Lawsuit Draft v1.docx");
-                        break;
-                    case "Retainer Agreement":
-                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("Retainer Template.dotx", "Retainer Draft v1.docx");
-                        break;
-                    case "OSHA Complaint":
-                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("New Complaint Template.dotx", "Complaint Draft v1.docx");
-                        break;
-                    case "Settlement Agreement":
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-
-            foreach (KeyValuePair<string, string> template in listOfTemplatesToPopulate)
-            {
-                toolStripProgressBar1.Value += 100 / listOfTemplatesToPopulate.Length;
-                PopulateClientTemplate(template);
-            }
-        }
-
         private void WriteCaseInfoTextFile()
         {
             string clientInfoPath = FullPathToClientDirectory + "\\Client Information.txt";
+
             string clientText = "Complainant\r\n--------------------\r\nName: " + Complainant.Name + "\r\nAddress:\r\n" + Complainant.Address.Line1 + "\r\n" + Complainant.Address.Line2 + "\r\nPhone: " + Complainant.PhoneNumber + "\r\nEmail: " + Complainant.EmailAddress + "\r\nDate Of Hire: " + Complainant.DateOfHire.ToString("D") + "\r\nDate Of Termination: " + Complainant.DateOfTermination.ToString("D") + "\r\n";
             string company1Text = "Respondent Company 1\r\n--------------------\r\nName: " + RespondentCompanyOne.Name + "\r\nAddress:\r\n" + RespondentCompanyOne.Address.Line1 + "\r\n" + RespondentCompanyOne.Address.Line2 + "\r\n";
             string company2Text = "Respondent Company 2\r\n--------------------\r\nName: " + RespondentCompanyTwo.Name + "\r\nAddress:\r\n" + RespondentCompanyTwo.Address.Line1 + "\r\n" + RespondentCompanyTwo.Address.Line2 + "\r\n";
             string individual1Text = "Individual Respondent 1: " + RespondentIndividualOne.Name + "\r\n";
             string individual2Text = "Individual Respondent 2: " + RespondentIndividualTwo.Name;
+
             string[] linesArray = new String[5] { clientText, company1Text, company2Text, individual1Text, individual2Text };
 
             File.WriteAllLines(clientInfoPath, linesArray);
@@ -195,6 +166,40 @@ namespace NewClientIntakeForm
             BookmarkList.Add("SigningAttorney", SigningAttorney.Name);
         }
 
+        private void CreateTemplatesForSelectedItems()
+        {
+            var checkedItems = SelectedDocsCheckboxList.CheckedItems;
+
+            KeyValuePair<string, string>[] listOfTemplatesToPopulate = new KeyValuePair<string, string>[checkedItems.Count];
+
+            for (int i = 0; i < checkedItems.Count; i++)
+            {
+                switch (checkedItems[i].ToString())
+                {
+                    case "Anatomy of a Lawsuit":
+                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("Anatomy Letter Template.dotx", "Anatomy of a Lawsuit Draft v1.docx");
+                        break;
+                    case "Retainer Agreement":
+                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("Retainer Template.dotx", "Retainer Draft v1.docx");
+                        break;
+                    case "OSHA Complaint":
+                        listOfTemplatesToPopulate[i] = new KeyValuePair<string, string>("New Complaint Template.dotx", "Complaint Draft v1.docx");
+                        break;
+                    case "Settlement Agreement":
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+            foreach (KeyValuePair<string, string> template in listOfTemplatesToPopulate)
+            {
+                toolStripProgressBar1.Value += 100 / listOfTemplatesToPopulate.Length;
+                PopulateClientTemplate(template);
+            }
+        }
+
         private void PopulateClientTemplate(KeyValuePair<string, string> templateNameAndfileSaveName)
         {
             toolStripStatusLabel1.Text = "Creating " + templateNameAndfileSaveName.Value;
@@ -220,7 +225,7 @@ namespace NewClientIntakeForm
             currentDocument.SaveAs2(Path.Combine(absolutePathToSave, templateNameAndfileSaveName.Value));
             currentDocument.Close();
             wordApplication.Quit();
-            
+
         }
 
         private void ReplaceBookmarksWithFormTextIn(Word._Document document)
