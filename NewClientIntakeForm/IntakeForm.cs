@@ -101,9 +101,8 @@ namespace NewClientIntakeForm
             try
             {
                 string currentDirectory = Directory.GetCurrentDirectory();
-                string basepath = Path.Combine(currentDirectory, "..", "..", "Shared", "Active Clients", "OSHA");
                 string clientFolderName = $"{CompLastName.Text.Trim()}, {CompFirstName.Text.Trim()}";
-                FullPathToClientDirectory = basepath + "\\" + clientFolderName;
+                FullPathToClientDirectory = Path.Combine(currentDirectory, "..", "..", "Shared", "Active Clients", "OSHA", clientFolderName);
                 if (!Directory.Exists(FullPathToClientDirectory))
                 {
                     Directory.CreateDirectory(FullPathToClientDirectory);
@@ -116,7 +115,7 @@ namespace NewClientIntakeForm
                         return;
                     } else
                     {
-                        Application.Exit();
+                        Environment.Exit(0);
                     }
                     
                 }
